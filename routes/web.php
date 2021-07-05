@@ -21,4 +21,5 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::resource('category', App\Http\Controllers\CategoryController::class);
 Route::get('/{anypath}', [App\Http\Controllers\HomeController::class, 'index'])->where('path','.*');

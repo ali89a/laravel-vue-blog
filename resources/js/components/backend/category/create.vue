@@ -1,43 +1,117 @@
 <template>
-
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-    <div class="card card-info">
-        <div class="card-header">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="card card-info">
+          <div class="card-header">
             <h3 class="card-title">Add Category</h3>
-            <div class="float-right"><router-link to="/categories">Category</router-link></div>
-        </div>
-        <!-- /.card-header -->
-        <!-- form start -->
-        <form class="form-horizontal">
+            <div class="float-right">
+              <router-link to="/categories">Category</router-link>
+            </div>
+          </div>
+          <!-- /.card-header -->
+          <!-- form start -->
+          <form
+            @submit.prevent="login"
+            @keydown="form.onKeydown($event)"
+            class="form-horizontal"
+          >
             <div class="card-body">
-                <div class="form-group row">
-                    <label for="name" class="col-sm-2 col-form-label">Name</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" id="name" placeholder="Enter name">
-                    </div>
+              <div class="form-group row">
+                <label for="name" class="col-sm-2 col-form-label">Name</label>
+                <div class="col-sm-10">
+                  <input
+                    v-model="form.name"
+                    type="text"
+                    name="name"
+                    placeholder="name"
+                    class="form-control"
+                  />
+                  <div
+                    v-if="form.errors.has('name')"
+                    v-html="form.errors.get('name')"
+                  />
                 </div>
+              </div>
+              <div class="form-group row">
+                <label for="status" class="col-sm-2 col-form-label"
+                  >Status</label
+                >
+                <div class="col-sm-10">
+                  <div class="form-check form-check-inline">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="status"
+                      v-model="form.status"
+                      id="inlineRadio1"
+                      value="1"
+                    />
+                    <label class="form-check-label" for="inlineRadio1"
+                      >Active</label
+                    >
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      v-model="form.status"
+                      name="status"
+                      id="inlineRadio2"
+                      value="0"
+                    />
+                    <label class="form-check-label" for="inlineRadio2"
+                      >Inactive</label
+                    >
+                  </div>
+
+                  <div
+                    v-if="form.errors.has('status')"
+                    v-html="form.errors.get('status')"
+                  />
+                </div>
+              </div>
             </div>
             <!-- /.card-body -->
             <div class="card-footer">
-                <button type="submit" class="btn btn-info">Sign in</button>
-                <button type="submit" class="btn btn-default float-right">Cancel</button>
+              <button type="submit" :disabled="form.busy" class="btn btn-info">
+                Sign in
+              </button>
+              <button type="reset" class="btn btn-default float-right">
+                Cancel
+              </button>
             </div>
             <!-- /.card-footer -->
-        </form>
-    </div>
-            </div>
+          </form>
         </div>
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
-    export default {
-        name: "create"
-    }
+export default {
+  name: "create",
+
+  data: () => ({
+    form: new Form({
+      name: "",
+      status: "",
+    }),
+  }),
+
+  methods: {
+    async login() {
+      const response = await this.form.post("/category");
+    //   Toast.fire({
+    //     icon: "success",
+    //     title: "Signed in successfully",
+    //   });
+    toastr.info('Are you the 6 fingered man?');
+    },
+  },
+};
 </script>
 
 <style scoped>
-
 </style>
