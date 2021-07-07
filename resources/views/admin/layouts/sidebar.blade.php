@@ -9,12 +9,12 @@
         </div>
     </div>
 
-  
+
 
     <!-- Sidebar Menu -->
     <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-           
+
             <li class="nav-item">
                 <router-link to="/home" class="nav-link">
                 <i class="nav-icon fas fa-tachometer-alt"></i>
@@ -31,7 +31,15 @@
                     </p>
                 </router-link>
             </li>
-        
+            <li class="nav-item">
+                <router-link to="/posts" class="nav-link">
+                <i class="nav-icon fas fa-list-alt"></i>
+                    <p>
+                      Post
+                    </p>
+                </router-link>
+            </li>
+
             <li class="nav-item">
                 <a href="#" class="nav-link">
                     <i class="nav-icon fas fa-table"></i>
@@ -61,7 +69,7 @@
                     </li>
                 </ul>
             </li>
-           
+
         </ul>
     </nav>
     <!-- /.sidebar-menu -->

@@ -15,6 +15,7 @@
             <table class="table table-sm">
               <thead>
                 <tr>
+                  <th style="width: 10px"><input type="checkbox"/></th>
                   <th style="width: 10px">#</th>
                   <th>Name</th>
                   <th>Status</th>
@@ -22,18 +23,20 @@
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>1.</td>
-                  <td>Update software</td>
-                  <td>Update software</td>
+                <tr v-for="(category,index) in categories">
+                  <td><input type="checkbox" :value="category.id" v-model="categoryIds"/></td>
+                  <td>{{ ++index }}</td>
+                  <td>{{ category.name }}</td>
+                  <td>{{ category.status }}</td>
                   <td>
                       <div class="btn-group" role="group" aria-label="Basic example">
-                          <button type="button" class="btn btn-secondary">Left</button>
-                          <button type="button" class="btn btn-secondary">Middle</button>
-                          <button type="button" class="btn btn-secondary">Right</button>
+                          <router-link :to="`/edit-category/${category.slug}`" class="btn btn-sm btn-primary">Edit</router-link>
+
+                          <button type="button" class="btn btn-sm btn-danger" @click="removeCategory(category.id)">Delete</button>
                       </div>
                     </td>
                 </tr>
+
 
               </tbody>
             </table>
@@ -47,10 +50,44 @@
 
 <script>
 export default {
-  name: "home",
+  name: "Category",
+    data:function(){
+        return{
+            categoryIds:[]
+        }
+    },
   mounted() {
-    console.log("Component mounted.");
+   this.$store.dispatch("getCategories");
   },
+    computed:{
+      categories(){
+            return this.$store.getters.categories;
+        }
+    },
+    methods:{
+        removeCategory(id){
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    axios.delete("api/category/"+id)
+                        .then((response) => {
+                            console.log(response.data);
+                            this.$store.dispatch("getCategories");
+                        })
+                        .catch((error) => {
+                            console.log(error);
+                        });
+                }
+            });
+        }
+    }
 };
 </script>
 

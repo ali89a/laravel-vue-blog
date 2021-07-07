@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
@@ -14,7 +15,10 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
+      $category= Category::all();
+    return response()->json([
+        'categories'=>$category
+    ],200);
     }
 
     /**
@@ -42,6 +46,7 @@ class CategoryController extends Controller
         $category = Category::create([
             'name' => $request->name,
             'status' => $request->status,
+            'slug' => Str::slug($request->name),
         ]);
         return response('Successfully Save', 200);
     }
@@ -60,12 +65,15 @@ class CategoryController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Category  $category
+     * @param   $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Category $category)
+    public function edit($id)
     {
-        //
+       $category=Category::where('slug',$id)->first();
+       return response()->json([
+           'category'=> $category
+       ],200);
     }
 
     /**
@@ -75,9 +83,20 @@ class CategoryController extends Controller
      * @param  \App\Models\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Category $category)
+    public function update(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'status' => 'required',
+        ]);
+       $category= Category::find($request->id);
+       $category->name=$request->name;
+       $category->status=$request->status;
+       $category->slug=Str::slug($request->name);
+       $category->save();
+        return response()->json([
+            'category'=> $category
+        ],200);
     }
 
     /**
@@ -86,8 +105,12 @@ class CategoryController extends Controller
      * @param  \App\Models\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Category $category)
+    public function destroy($id)
     {
-        //
+        $category=Category::find($id);
+        $category->delete();
+        return response()->json([
+            'categories'=>$category
+        ],200);
     }
 }

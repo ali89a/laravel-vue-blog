@@ -102,12 +102,14 @@ export default {
 
   methods: {
     async login() {
-      const response = await this.form.post("/category");
+        let vm = this;
+      const response = await this.form.post("/api/category");
     //   Toast.fire({
     //     icon: "success",
     //     title: "Signed in successfully",
     //   });
-    toastr.info('Are you the 6 fingered man?');
+        vm.$router.push("categories");
+    toastr.success('successfully added');
     },
   },
 };
