@@ -14,7 +14,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        $post= Post::all();
+        $post= Post::with('user','category')->get();
         return response()->json([
             'posts'=>$post
         ],200);
@@ -81,8 +81,12 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Post $post)
+    public function destroy($id)
     {
-        //
+        $category=Post::find($id);
+        $category->delete();
+        return response()->json([
+            'posts'=>$category
+        ],200);
     }
 }

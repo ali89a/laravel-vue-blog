@@ -30,15 +30,15 @@
                             <tr v-for="(post,index) in posts">
                                 <td><input type="checkbox" :value="post.id" v-model="categoryIds"/></td>
                                 <td>{{ ++index }}</td>
-                                <td>{{ post.name }}</td>
-                                <td>{{ post.name }}</td>
-                                <td>{{ post.name }}</td>
-                                <td>{{ post.name }}</td>
-                                <td>{{ post.name }}</td>
+                                <td>{{ post.title }}</td>
+                                <td>{{ post.category.name }}</td>
+                                <td>{{ post.content }}</td>
+                                <td><img :src="post.img" width="100"></td>
+                                <td>{{ post.user.name }}</td>
                                 <td>{{ post.status }}</td>
                                 <td>
                                     <div class="btn-group" role="group" aria-label="Basic example">
-                                        <router-link :to="`/edit-category/${post.slug}`" class="btn btn-sm btn-primary">Edit</router-link>
+                                        <router-link :to="`/edit-post/${post.slug}`" class="btn btn-sm btn-primary">Edit</router-link>
 
                                         <button type="button" class="btn btn-sm btn-danger" @click="removePost(post.id)">Delete</button>
                                     </div>
@@ -84,7 +84,7 @@
                     confirmButtonText: 'Yes, delete it!'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        axios.delete("api/category/"+id)
+                        axios.delete("api/posts/"+id)
                             .then((response) => {
                                 console.log(response.data);
                                 this.$store.dispatch("getPosts");

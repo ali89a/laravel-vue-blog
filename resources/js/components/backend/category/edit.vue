@@ -115,7 +115,7 @@
             },
             getCategory() {
                 let vm=this;
-              axios.get("/api/getCategory/"+this.$route.params.id).then((response)=>{
+              axios.get("/api/get-category/"+this.$route.params.id).then((response)=>{
                     vm.form.fill(response.data.category);
               }).catch(()=>{
 

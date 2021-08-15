@@ -11,7 +11,7 @@ export const routes = [
     { path: "/home", component: home },
     { path: "/categories", component: category },
     { path: "/add-category", component: addCategory },
-    { path: "/edit-category", component: editCategory },
+    { path: "/edit-category/:id", component: editCategory },
     { path: "/posts", component: post },
     { path: "/add-post", component: addPost },
     { path: "/edit-post/:id", component: editPost },

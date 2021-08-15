@@ -15,18 +15,20 @@
             <table class="table table-sm">
               <thead>
                 <tr>
-                  <th style="width: 10px"><input type="checkbox"/></th>
+                  <th style="width: 10px"><input type="checkbox" @click="checkAll" v-model="checkedAll" /></th>
                   <th style="width: 10px">#</th>
                   <th>Name</th>
+                  <th>Slug</th>
                   <th>Status</th>
                   <th style="width: 40px">Action</th>
                 </tr>
               </thead>
               <tbody>
                 <tr v-for="(category,index) in categories">
-                  <td><input type="checkbox" :value="category.id" v-model="categoryIds"/></td>
+                  <td><input type="checkbox" :value="category.id" v-model="checked"/></td>
                   <td>{{ ++index }}</td>
                   <td>{{ category.name }}</td>
+                  <td>{{ category.slug }}</td>
                   <td>{{ category.status }}</td>
                   <td>
                       <div class="btn-group" role="group" aria-label="Basic example">
@@ -53,7 +55,8 @@ export default {
   name: "Category",
     data:function(){
         return{
-            categoryIds:[]
+            checked:[],
+            checkedAll:false
         }
     },
   mounted() {
@@ -65,7 +68,10 @@ export default {
         }
     },
     methods:{
-        removeCategory(id){
+        checkAll(){
+            console.log('test');
+        },
+            removeCategory(id){
             Swal.fire({
                 title: 'Are you sure?',
                 text: "You won't be able to revert this!",

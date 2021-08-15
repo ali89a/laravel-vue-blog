@@ -4,9 +4,9 @@
             <div class="col-md-8">
                 <div class="card card-info">
                     <div class="card-header">
-                        <h3 class="card-title">Edit Category{{ this.$route.params.id}}</h3>
+                        <h3 class="card-title">Edit Post</h3>
                         <div class="float-right">
-                            <router-link to="/categories">Category</router-link>
+                            <router-link to="/posts">Post</router-link>
                         </div>
                     </div>
                     <!-- /.card-header -->

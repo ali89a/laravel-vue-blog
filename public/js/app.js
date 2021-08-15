@@ -2174,7 +2174,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     getCategory: function getCategory() {
       var vm = this;
-      axios.get("/api/getCategory/" + this.$route.params.id).then(function (response) {
+      axios.get("/api/get-category/" + this.$route.params.id).then(function (response) {
         vm.form.fill(response.data.category);
       })["catch"](function () {});
     }
@@ -2247,11 +2247,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "Category",
   data: function data() {
     return {
-      categoryIds: []
+      checked: [],
+      checkedAll: false
     };
   },
   mounted: function mounted() {
@@ -2263,6 +2266,9 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   methods: {
+    checkAll: function checkAll() {
+      console.log('test');
+    },
     removeCategory: function removeCategory(id) {
       var _this = this;
 
@@ -2680,7 +2686,7 @@ __webpack_require__.r(__webpack_exports__);
         confirmButtonText: 'Yes, delete it!'
       }).then(function (result) {
         if (result.isConfirmed) {
-          axios["delete"]("api/category/" + id).then(function (response) {
+          axios["delete"]("api/posts/" + id).then(function (response) {
             console.log(response.data);
 
             _this.$store.dispatch("getPosts");
@@ -2837,7 +2843,7 @@ var routes = [{
   path: "/add-category",
   component: _components_backend_category_create__WEBPACK_IMPORTED_MODULE_2__.default
 }, {
-  path: "/edit-category",
+  path: "/edit-category/:id",
   component: _components_backend_category_edit__WEBPACK_IMPORTED_MODULE_3__.default
 }, {
   path: "/posts",
@@ -44238,7 +44244,62 @@ var render = function() {
           _vm._v(" "),
           _c("div", { staticClass: "card-body p-0" }, [
             _c("table", { staticClass: "table table-sm" }, [
-              _vm._m(0),
+              _c("thead", [
+                _c("tr", [
+                  _c("th", { staticStyle: { width: "10px" } }, [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.checkedAll,
+                          expression: "checkedAll"
+                        }
+                      ],
+                      attrs: { type: "checkbox" },
+                      domProps: {
+                        checked: Array.isArray(_vm.checkedAll)
+                          ? _vm._i(_vm.checkedAll, null) > -1
+                          : _vm.checkedAll
+                      },
+                      on: {
+                        click: _vm.checkAll,
+                        change: function($event) {
+                          var $$a = _vm.checkedAll,
+                            $$el = $event.target,
+                            $$c = $$el.checked ? true : false
+                          if (Array.isArray($$a)) {
+                            var $$v = null,
+                              $$i = _vm._i($$a, $$v)
+                            if ($$el.checked) {
+                              $$i < 0 && (_vm.checkedAll = $$a.concat([$$v]))
+                            } else {
+                              $$i > -1 &&
+                                (_vm.checkedAll = $$a
+                                  .slice(0, $$i)
+                                  .concat($$a.slice($$i + 1)))
+                            }
+                          } else {
+                            _vm.checkedAll = $$c
+                          }
+                        }
+                      }
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _c("th", { staticStyle: { width: "10px" } }, [_vm._v("#")]),
+                  _vm._v(" "),
+                  _c("th", [_vm._v("Name")]),
+                  _vm._v(" "),
+                  _c("th", [_vm._v("Slug")]),
+                  _vm._v(" "),
+                  _c("th", [_vm._v("Status")]),
+                  _vm._v(" "),
+                  _c("th", { staticStyle: { width: "40px" } }, [
+                    _vm._v("Action")
+                  ])
+                ])
+              ]),
               _vm._v(" "),
               _c(
                 "tbody",
@@ -44250,35 +44311,35 @@ var render = function() {
                           {
                             name: "model",
                             rawName: "v-model",
-                            value: _vm.categoryIds,
-                            expression: "categoryIds"
+                            value: _vm.checked,
+                            expression: "checked"
                           }
                         ],
                         attrs: { type: "checkbox" },
                         domProps: {
                           value: category.id,
-                          checked: Array.isArray(_vm.categoryIds)
-                            ? _vm._i(_vm.categoryIds, category.id) > -1
-                            : _vm.categoryIds
+                          checked: Array.isArray(_vm.checked)
+                            ? _vm._i(_vm.checked, category.id) > -1
+                            : _vm.checked
                         },
                         on: {
                           change: function($event) {
-                            var $$a = _vm.categoryIds,
+                            var $$a = _vm.checked,
                               $$el = $event.target,
                               $$c = $$el.checked ? true : false
                             if (Array.isArray($$a)) {
                               var $$v = category.id,
                                 $$i = _vm._i($$a, $$v)
                               if ($$el.checked) {
-                                $$i < 0 && (_vm.categoryIds = $$a.concat([$$v]))
+                                $$i < 0 && (_vm.checked = $$a.concat([$$v]))
                               } else {
                                 $$i > -1 &&
-                                  (_vm.categoryIds = $$a
+                                  (_vm.checked = $$a
                                     .slice(0, $$i)
                                     .concat($$a.slice($$i + 1)))
                               }
                             } else {
-                              _vm.categoryIds = $$c
+                              _vm.checked = $$c
                             }
                           }
                         }
@@ -44288,6 +44349,8 @@ var render = function() {
                     _c("td", [_vm._v(_vm._s(++index))]),
                     _vm._v(" "),
                     _c("td", [_vm._v(_vm._s(category.name))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(category.slug))]),
                     _vm._v(" "),
                     _c("td", [_vm._v(_vm._s(category.status))]),
                     _vm._v(" "),
@@ -44339,28 +44402,7 @@ var render = function() {
     ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("thead", [
-      _c("tr", [
-        _c("th", { staticStyle: { width: "10px" } }, [
-          _c("input", { attrs: { type: "checkbox" } })
-        ]),
-        _vm._v(" "),
-        _c("th", { staticStyle: { width: "10px" } }, [_vm._v("#")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Name")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Status")]),
-        _vm._v(" "),
-        _c("th", { staticStyle: { width: "40px" } }, [_vm._v("Action")])
-      ])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -44388,15 +44430,13 @@ var render = function() {
       _c("div", { staticClass: "col-md-8" }, [
         _c("div", { staticClass: "card card-info" }, [
           _c("div", { staticClass: "card-header" }, [
-            _c("h3", { staticClass: "card-title" }, [_vm._v("Add Category")]),
+            _c("h3", { staticClass: "card-title" }, [_vm._v("Add Post")]),
             _vm._v(" "),
             _c(
               "div",
               { staticClass: "float-right" },
               [
-                _c("router-link", { attrs: { to: "/categories" } }, [
-                  _vm._v("Category")
-                ])
+                _c("router-link", { attrs: { to: "/posts" } }, [_vm._v("Post")])
               ],
               1
             )
@@ -44619,17 +44659,13 @@ var render = function() {
       _c("div", { staticClass: "col-md-8" }, [
         _c("div", { staticClass: "card card-info" }, [
           _c("div", { staticClass: "card-header" }, [
-            _c("h3", { staticClass: "card-title" }, [
-              _vm._v("Edit Category" + _vm._s(this.$route.params.id))
-            ]),
+            _c("h3", { staticClass: "card-title" }, [_vm._v("Edit Post")]),
             _vm._v(" "),
             _c(
               "div",
               { staticClass: "float-right" },
               [
-                _c("router-link", { attrs: { to: "/categories" } }, [
-                  _vm._v("Category")
-                ])
+                _c("router-link", { attrs: { to: "/posts" } }, [_vm._v("Post")])
               ],
               1
             )
@@ -44919,15 +44955,17 @@ var render = function() {
                     _vm._v(" "),
                     _c("td", [_vm._v(_vm._s(++index))]),
                     _vm._v(" "),
-                    _c("td", [_vm._v(_vm._s(post.name))]),
+                    _c("td", [_vm._v(_vm._s(post.title))]),
                     _vm._v(" "),
-                    _c("td", [_vm._v(_vm._s(post.name))]),
+                    _c("td", [_vm._v(_vm._s(post.category.name))]),
                     _vm._v(" "),
-                    _c("td", [_vm._v(_vm._s(post.name))]),
+                    _c("td", [_vm._v(_vm._s(post.content))]),
                     _vm._v(" "),
-                    _c("td", [_vm._v(_vm._s(post.name))]),
+                    _c("td", [
+                      _c("img", { attrs: { src: post.img, width: "100" } })
+                    ]),
                     _vm._v(" "),
-                    _c("td", [_vm._v(_vm._s(post.name))]),
+                    _c("td", [_vm._v(_vm._s(post.user.name))]),
                     _vm._v(" "),
                     _c("td", [_vm._v(_vm._s(post.status))]),
                     _vm._v(" "),
@@ -44946,7 +44984,7 @@ var render = function() {
                             "router-link",
                             {
                               staticClass: "btn btn-sm btn-primary",
-                              attrs: { to: "/edit-category/" + post.slug }
+                              attrs: { to: "/edit-post/" + post.slug }
                             },
                             [_vm._v("Edit")]
                           ),
